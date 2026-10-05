@@ -17,6 +17,11 @@ body{font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC',
 
 /* ---------- 场景 ---------- */
 #scene{position:fixed;inset:0;background:url('img/bg.png') center 62%/cover no-repeat,linear-gradient(180deg,#5C4632,#2E2620)}
+.plaque{position:absolute;top:calc(env(safe-area-inset-top) + 10px);left:50%;transform:translateX(-50%);z-index:3;
+  background:linear-gradient(180deg,#4E3B28,#3A2C1D);color:#EFD9A7;border:1px solid rgba(201,168,106,.55);border-radius:6px;
+  padding:7px 18px;font-size:13px;letter-spacing:3px;box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 0 0 2px rgba(0,0,0,.25),inset 0 0 14px rgba(201,168,106,.18);white-space:nowrap}
+.plaque i{font-style:normal;font-weight:700;letter-spacing:4px}
+.plaque em{font-style:italic;font-size:9px;letter-spacing:2px;opacity:.75;margin-left:6px}
 #scene::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,22,16,.28),rgba(30,22,16,0) 30%,rgba(46,38,32,.42) 88%)}
 .vig{position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 140px rgba(20,14,9,.55);z-index:1}
 
@@ -33,9 +38,9 @@ body{font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC',
 #bearSeat svg{width:100%;display:block}
 
 #coffeeDock{position:fixed;left:calc(env(safe-area-inset-left) + 16px);bottom:calc(env(safe-area-inset-bottom) + 96px);width:150px;z-index:5}
-#coffeeDock .coaster{display:flex;align-items:center;justify-content:center;height:150px;border-radius:16px;
-  border:1.5px dashed rgba(247,239,226,.55);color:rgba(247,239,226,.75);font-size:12px;letter-spacing:2px;text-align:center;line-height:1.9;
-  background:rgba(46,38,32,.25);backdrop-filter:blur(2px)}
+#coffeeDock .coaster b{font-weight:600;font-size:12px;letter-spacing:1px;line-height:1.6}
+.coaster span{font-size:10.5px;opacity:.75;letter-spacing:1px;white-space:nowrap}
+.coaster{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;height:150px;border-radius:16px;text-align:center;padding:0 10px}
 #coffeeDock.served .coaster{display:none}
 #coffeeDock .cupcard{display:none;position:relative;border-radius:14px;overflow:hidden;background:var(--paper);
   box-shadow:0 14px 30px rgba(20,14,9,.45);border:1px solid rgba(247,239,226,.25)}
@@ -66,10 +71,12 @@ body{font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC',
 #dock{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;justify-content:center;gap:10px;
   padding:12px 14px calc(env(safe-area-inset-bottom) + 12px);
   background:linear-gradient(transparent,rgba(30,22,16,.55) 30%,rgba(30,22,16,.82))}
-#dock button{border:none;cursor:pointer;font-family:inherit;background:rgba(247,239,226,.94);color:var(--ink);
+#dock button{border:none;cursor:pointer;font-family:inherit;background:rgba(247,239,226,.94);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.35;min-width:96px;
   font-size:13.5px;font-weight:600;letter-spacing:2px;padding:12px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(0,0,0,.3);display:flex;align-items:center;gap:7px;transition:transform .15s}
 #dock button:active{transform:scale(.95)}
-#dock button em{font-style:normal;font-family:Georgia,serif;font-size:11px;color:var(--ink2);letter-spacing:.5px;font-weight:500}
+#dock button span{white-space:nowrap;font-weight:700;letter-spacing:2px}
+#dock button b{font-size:17px;line-height:1}
+#dock button em{font-style:normal;font-family:Georgia,serif;font-size:9.5px;color:var(--ink2);letter-spacing:1.5px;font-weight:500;text-transform:uppercase}
 
 /* ---------- 抽屉 ---------- */
 .sheet{position:fixed;inset:0;z-index:30;pointer-events:none}
@@ -148,19 +155,27 @@ body{font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC',
   #bearSeat{width:200px;bottom:calc(env(safe-area-inset-bottom) + 78px)}
   #notebook{width:112px;height:148px}
   #coffeeDock{width:126px}#coffeeDock img{height:126px}#coffeeDock .coaster{height:126px}
-  #dock button{padding:11px 14px;font-size:12.5px}
+  #dock button{padding:9px 16px;font-size:13px}
 }
+
+/* ============ 存图覆盖层 ============ */
+#saveOv{position:fixed;inset:0;z-index:95;background:rgba(24,18,12,.92);display:none;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 14px);overflow:auto}
+#saveOv.on{display:flex}
+.saveTip{color:#EFD9A7;font-size:13px;letter-spacing:2px;margin:6px 0 12px;font-family:Georgia,'Noto Serif SC',serif}
+#saveImg{width:100%;max-width:420px;border-radius:4px;box-shadow:0 18px 60px rgba(0,0,0,.6)}
+#saveClose{margin-top:16px;background:rgba(247,239,226,.94);border:none;border-radius:999px;padding:10px 34px;font-size:13px;letter-spacing:3px;color:var(--ink);cursor:pointer}
 </style>
 </head>
 <body>
-<div id="scene"></div>
+<div id="scene">
+  <div class="plaque serif"><i>CAFÉ</i> des Histoires <em>· dep. 1927 ·</em></div></div>
 <div class="vig"></div>
-<div id="welcome" class="serif">欢迎光临 · 窗边的位子给你留着</div>
+<div id="welcome" class="serif">Bonjour · 窗边的位子给你留着</div>
 
 <div id="bearSeat" title="摸摸它"></div>
 
 <div id="coffeeDock">
-  <div class="coaster">桌上还没有咖啡<br><span style="opacity:.7;font-size:10.5px">点一杯</span></div>
+  <div class="coaster"><b>桌上还没有咖啡</b><span>点一杯 ☕</span></div>
   <div class="cupcard"><div class="steam"></div><div class="steam"></div><div class="steam"></div><img id="cupImg" alt=""><div class="cupname" id="cupName"></div></div>
 </div>
 
@@ -171,9 +186,9 @@ body{font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC',
 </button>
 
 <div id="dock">
-  <button id="btnMenu">☕ 点单 <em>Menu</em></button>
-  <button id="btnBear">🧸 小熊 <em>Bear</em></button>
-  <button id="btnBook">✒️ 手记 <em>Cahier</em></button>
+  <button id="btnMenu"><b>☕</b><span>点单</span><em>Menu</em></button>
+  <button id="btnBear"><b>🧸</b><span>小熊</span><em>Bear</em></button>
+  <button id="btnBook"><b>✒️</b><span>手记</span><em>Cahier</em></button>
 </div>
 
 <div class="sheet" id="menuSheet">
@@ -204,12 +219,13 @@ body{font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC',
     <div class="phead"><div class="shop">故 事 咖 啡 馆 · CAHIER</div><div class="rule"></div></div>
     <input id="pTitle" class="serif" placeholder="给今天起个小标题" maxlength="40">
     <textarea id="pBody" placeholder="今天的风、今天的咖啡，和它一起坐了一下午——" spellcheck="false"></textarea>
-    <div class="pfoot"><span id="pDate"></span><span>写于故事咖啡馆</span></div>
+    <div class="pfoot"><span id="pDate"></span><span>写于故事咖啡馆 · Café des Histoires</span></div>
     <div class="pbar">
       <button class="ghost" id="pgPrev">‹ 上页</button>
       <span id="pageNum"></span>
       <button class="ghost" id="pgNext">下页 ›</button>
       <button id="pgNew">＋ 新的一页</button>
+      <button class="ghost" id="pgSave">存为图片</button>
       <button class="danger" id="pgDel">撕掉此页</button>
       <button class="ghost" id="pgClose">合上本子</button>
     </div>
@@ -251,10 +267,32 @@ $("#menuGrid").addEventListener("click",e=>{
 
 /* ============ 小熊 ============ */
 function bearSVG(){return `<svg viewBox="0 0 240 264" xmlns="http://www.w3.org/2000/svg">
- <g>
-  <circle cx="62" cy="54" r="30" fill="var(--bear)"/><circle cx="62" cy="54" r="15" fill="var(--bear2)"/>
-  <circle cx="178" cy="54" r="30" fill="var(--bear)"/><circle cx="178" cy="54" r="15" fill="var(--bear2)"/>
-  <ellipse cx="120" cy="90" rx="76" ry="66" fill="var(--bear)"/>
+ <defs>
+  <filter id="fluff" x="-12%" y="-12%" width="124%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.14" numOctaves="3" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5"/>
+  </filter>
+  <filter id="fluff2" x="-14%" y="-14%" width="128%" height="128%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves="2" seed="3" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5"/>
+  </filter>
+  <radialGradient id="gBody" cx="42%" cy="36%" r="75%">
+    <stop class="gS1" offset="0%" stop-color="#C79F7B"/><stop class="gS2" offset="70%" stop-color="#B08968"/>
+    <stop class="gS3" offset="100%" stop-color="#97714F"/>
+  </radialGradient>
+  <radialGradient id="gHead" cx="44%" cy="34%" r="78%">
+    <stop class="gS1" offset="0%" stop-color="#C79F7B"/><stop class="gS2" offset="72%" stop-color="#B08968"/>
+    <stop class="gS3" offset="100%" stop-color="#97714F"/>
+  </radialGradient>
+ </defs>
+ <g filter="url(#fluff)">
+  <g stroke="var(--bear2)" stroke-width="1.6" fill="none" opacity=".5" stroke-linecap="round">
+    <path d="M52 70 q-4 8 -1 15 M188 70 q4 8 1 15 M48 92 q-3 7 0 13 M192 92 q3 7 0 13"/>
+    <path d="M66 172 q-6 10 -3 20 M174 172 q6 10 3 20"/>
+  </g>
+  <circle cx="62" cy="54" r="30" fill="url(#gHead)"/><circle cx="62" cy="54" r="15" fill="var(--bear2)" filter="url(#fluff2)"/>
+  <circle cx="178" cy="54" r="30" fill="url(#gHead)"/><circle cx="178" cy="54" r="15" fill="var(--bear2)" filter="url(#fluff2)"/>
+  <ellipse cx="120" cy="90" rx="76" ry="66" fill="url(#gHead)"/>
   <ellipse cx="120" cy="108" rx="34" ry="25" fill="var(--bear2)"/>
   <ellipse cx="120" cy="97" rx="12" ry="9" fill="#4A3728"/>
   <path d="M120 106 v9 M120 115 q-8 8 -16 4 M120 115 q8 8 16 4" stroke="#4A3728" stroke-width="2.6" fill="none" stroke-linecap="round"/>
@@ -292,7 +330,14 @@ let bearColor=localStorage.getItem("cafe_bear")||"#B08968";
 function renderBear(){
   document.documentElement.style.setProperty("--bear",bearColor);
   document.documentElement.style.setProperty("--bear2",lighten(bearColor,22));
+  document.documentElement.style.setProperty("--bearHi",lighten(bearColor,12));
+  document.documentElement.style.setProperty("--bearLo",lighten(bearColor,-9));
+  const hi=lighten(bearColor,12),mid=bearColor,lo=lighten(bearColor,-9);
   $("#bearSeat").innerHTML=bearSVG();$("#bearPreview").innerHTML=bearSVG();
+  const hi2=lighten(bearColor,12),lo2=lighten(bearColor,-9);
+  document.querySelectorAll(".gS1").forEach(x=>x.setAttribute("stop-color",hi2));
+  document.querySelectorAll(".gS2").forEach(x=>x.setAttribute("stop-color",bearColor));
+  document.querySelectorAll(".gS3").forEach(x=>x.setAttribute("stop-color",lo2));
   const i=SWATCHES.indexOf(bearColor);
   $("#bearCap").textContent=i>=0?`第 ${i+1} 号毛色 —— 它很喜欢这身。`:"定制毛色 —— 独一无二的一只。";
   $("#swGrid").querySelectorAll("button").forEach(b=>b.classList.toggle("sel",b.dataset.c===bearColor));
@@ -301,7 +346,7 @@ $("#swGrid").innerHTML=SWATCHES.map(c=>`<button data-c="${c}" style="background:
 $("#swGrid").addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;
   bearColor=b.dataset.c;localStorage.setItem("cafe_bear",bearColor);
-  renderBear();toast("它抖了抖耳朵，换上了新毛色。");
+  renderBear();toast("它抖了抖耳朵 —— il est charmant。");
 });
 $("#bearSeat").addEventListener("click",()=>toast("它抬头看了你一眼，尾巴摇了摇。"));
 renderBear();
@@ -365,6 +410,62 @@ $("#btnMenu").addEventListener("click",()=>$("#menuSheet").classList.add("on"));
 $("#btnBear").addEventListener("click",()=>$("#bearSheet").classList.add("on"));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("#book").classList.remove("on");closeSheet("menuSheet");closeSheet("bearSheet")}});
 setTimeout(()=>{$("#welcome").classList.add("on");setTimeout(()=>$("#welcome").classList.remove("on"),3200)},700);
+</script>
+<div id="saveOv">
+  <div class="saveTip">长按图片 · 保存到相册 🖼</div>
+  <img id="saveImg" alt="信纸页">
+  <button id="saveClose">合上</button>
+</div>
+<script>
+/* ============ 存为图片：canvas 绘制信纸 ============ */
+function wrapText(ctx,text,maxW){const out=[];let line="";
+  for(const ch of text){if(ch==="\n"){out.push(line);line="";continue}
+    if(ctx.measureText(line+ch).width>maxW){out.push(line);line=ch}else line+=ch}
+  out.push(line);return out}
+function serif(sz,w){return (w?w+" ":"")+sz+"px Georgia,'Noto Serif SC','Songti SC','SimSun',serif"}
+$("#pgSave").addEventListener("click",()=>{
+  const p=BOOK.pages[BOOK.cur];if(!p||!((p.txt||"").trim())&&!((p.t||"").trim())){toast("这一页还没有字迹。");return}
+  saveBook(true);
+  const cv=document.createElement("canvas");cv.width=780;cv.height=1090;const x=cv.getContext("2d");
+  // 纸底+纤维感
+  x.fillStyle="#FBF5E9";x.fillRect(0,0,780,1090);
+  x.globalAlpha=.05;x.fillStyle="#8A6F45";
+  for(let i=0;i<420;i++)x.fillRect(Math.random()*780,Math.random()*1090,1.6,1.6);
+  x.globalAlpha=1;
+  // 双线框
+  x.strokeStyle="#C9B896";x.lineWidth=2.5;x.strokeRect(30,30,720,1030);
+  x.lineWidth=1;x.strokeRect(40,40,700,1010);
+  // 角花 ❦
+  x.fillStyle="#C9B896";x.font=serif(24);x.textAlign="center";x.textBaseline="middle";
+  x.fillText("❦",58,62);x.fillText("❦",722,62);x.fillText("❦",58,1028);x.fillText("❦",722,1028);
+  // 页眉
+  x.fillStyle="#A98E5C";x.font=serif(15);x.fillText("CAHIER · 故 事 咖 啡 馆",390,86);
+  x.fillText("—— · ——",390,110);
+  // 标题
+  const t=(p.t||"").trim()||"无题";
+  x.fillStyle="#3B2F24";x.font=serif(34,"bold");x.fillText(t,390,176);
+  x.strokeStyle="#D8C9A6";x.lineWidth=1.2;
+  x.beginPath();x.moveTo(200,208);x.lineTo(580,208);x.stroke();
+  // 正文（自动换行）
+  x.font=serif(26);x.fillStyle="#43372B";x.textAlign="left";x.textBaseline="alphabetic";
+  const lines=wrapText(x,p.txt||"",600);const lh=48;
+  let ty=266;const maxY=940;
+  const show=lines.slice(0,Math.floor((maxY-266)/lh));
+  show.forEach((ln,i)=>x.fillText(ln,92,266+i*lh));
+  if(lines.length>show.length){x.fillStyle="#B9A98E";x.font=serif(20);x.fillText("……（后文见本子）",92,maxY)}
+  // 落款
+  const d=new Date(p.at||Date.now());
+  const ds=d.getFullYear()+" 年 "+(d.getMonth()+1)+" 月 "+d.getDate()+" 日";
+  x.textAlign="right";x.fillStyle="#6B5B48";x.font=serif(20);
+  x.fillText(ds+" · 第 "+(BOOK.cur+1)+" 页",688,1012);
+  x.textAlign="center";x.fillStyle="#A98E5C";x.font=serif(16);
+  x.fillText("写于故事咖啡馆 · Café des Histoires",390,1046);
+  // 导出
+  const url=cv.toDataURL("image/png");
+  $("#saveImg").src=url;$("#saveOv").classList.add("on");
+  try{const a=document.createElement("a");a.href=url;a.download="故事咖啡馆-手记-第"+(BOOK.cur+1)+"页.png";document.body.appendChild(a);a.click();a.remove()}catch(e){}
+});
+$("#saveClose").addEventListener("click",()=>$("#saveOv").classList.remove("on"));
 </script>
 </body>
 </html>
