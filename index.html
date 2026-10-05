@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>故事咖啡馆 · Café des Histoires</title>
+<meta name="theme-color" content="#2E2620">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --wood:#2E2620; --wood2:#4A3B2E; --cream:#F7EFE2; --paper:#FBF5E9; --ink:#3B2F24; --ink2:#6B5B48;
+  --green:#41573F; --gold:#C9A86A; --hair:rgba(59,47,36,.16);
+}
+html,body{height:100%}
+body{font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC','Microsoft YaHei',sans-serif;color:var(--ink);overflow:hidden;background:var(--wood)}
+.serif{font-family:Georgia,'Noto Serif SC','Songti SC','SimSun',serif}
+
+/* ---------- 场景 ---------- */
+#scene{position:fixed;inset:0;background:url('img/bg.png') center 62%/cover no-repeat,linear-gradient(180deg,#5C4632,#2E2620)}
+#scene::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,22,16,.28),rgba(30,22,16,0) 30%,rgba(46,38,32,.42) 88%)}
+.vig{position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 140px rgba(20,14,9,.55);z-index:1}
+
+/* ---------- 欢迎条 ---------- */
+#welcome{position:fixed;top:calc(env(safe-area-inset-top) + 14px);left:50%;transform:translateX(-50%);z-index:20;
+  background:rgba(247,239,226,.94);color:var(--ink);padding:9px 22px;border-radius:999px;font-size:13px;letter-spacing:2px;
+  box-shadow:0 6px 20px rgba(0,0,0,.35);opacity:0;transition:opacity .8s;white-space:nowrap}
+#welcome.on{opacity:1}
+
+/* ---------- 桌面物 ---------- */
+#bearSeat{position:fixed;left:50%;transform:translateX(-52%);bottom:calc(env(safe-area-inset-bottom) + 84px);width:min(230px,54vw);z-index:5;
+  filter:drop-shadow(0 18px 16px rgba(20,14,9,.4));transition:transform .3s}
+#bearSeat:active{transform:translateX(-52%) scale(.97)}
+#bearSeat svg{width:100%;display:block}
+
+#coffeeDock{position:fixed;left:calc(env(safe-area-inset-left) + 16px);bottom:calc(env(safe-area-inset-bottom) + 96px);width:150px;z-index:5}
+#coffeeDock .coaster{display:flex;align-items:center;justify-content:center;height:150px;border-radius:16px;
+  border:1.5px dashed rgba(247,239,226,.55);color:rgba(247,239,226,.75);font-size:12px;letter-spacing:2px;text-align:center;line-height:1.9;
+  background:rgba(46,38,32,.25);backdrop-filter:blur(2px)}
+#coffeeDock.served .coaster{display:none}
+#coffeeDock .cupcard{display:none;position:relative;border-radius:14px;overflow:hidden;background:var(--paper);
+  box-shadow:0 14px 30px rgba(20,14,9,.45);border:1px solid rgba(247,239,226,.25)}
+#coffeeDock.served .cupcard{display:block;animation:serve .7s cubic-bezier(.2,.8,.3,1)}
+@keyframes serve{from{transform:translateY(30px) scale(.9);opacity:0}to{transform:none;opacity:1}}
+#coffeeDock img{width:100%;height:150px;object-fit:cover;display:block}
+#coffeeDock .cupname{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(30,22,16,.75));
+  color:var(--cream);font-size:12px;letter-spacing:2px;padding:16px 10px 8px;text-align:center}
+.steam{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:3px;height:22px;border-radius:99px;
+  background:linear-gradient(rgba(255,255,255,.5),transparent);animation:rise 2.6s ease-in-out infinite;filter:blur(1px)}
+.steam:nth-child(2){margin-left:-12px;animation-delay:.9s}.steam:nth-child(3){margin-left:12px;animation-delay:1.6s}
+@keyframes rise{0%{transform:translate(-50%,0);opacity:0}30%{opacity:.7}100%{transform:translate(-50%,-26px);opacity:0}}
+
+#notebook{position:fixed;right:calc(env(safe-area-inset-right) + 14px);bottom:calc(env(safe-area-inset-bottom) + 92px);z-index:5;
+  width:132px;height:172px;border-radius:4px 12px 12px 4px;cursor:pointer;border:none;
+  background:linear-gradient(155deg,#4A3A46 0%,#3A2E38 55%,#332731 100%);
+  box-shadow:0 16px 34px rgba(20,14,9,.55), inset 4px 0 0 rgba(255,255,255,.06), inset -2px 0 6px rgba(0,0,0,.3);
+  transform:rotate(4deg);transition:transform .25s}
+#notebook:active{transform:rotate(4deg) scale(.96)}
+#notebook::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:rgba(247,239,226,.14)}
+#notebook .ribbon{position:absolute;top:-2px;right:24px;width:12px;height:56px;background:#A4523F;border-radius:0 0 6px 6px;box-shadow:0 3px 6px rgba(0,0,0,.3)}
+#notebook .ribbon::after{content:'';position:absolute;bottom:-8px;left:0;border:6px solid transparent;border-top:8px solid #A4523F}
+#notebook .emboss{position:absolute;inset:12px;border:1px solid rgba(201,168,106,.55);border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+#notebook .emboss b{font-family:Georgia,'Noto Serif SC','Songti SC',serif;color:var(--gold);font-size:15px;letter-spacing:4px;writing-mode:vertical-rl;font-weight:600}
+#notebook .emboss i{font-family:Georgia,serif;font-style:italic;color:rgba(201,168,106,.8);font-size:10px;letter-spacing:1px;writing-mode:vertical-rl}
+#notebook .hint{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);white-space:nowrap;color:rgba(247,239,226,.65);font-size:10.5px;letter-spacing:2px}
+
+/* ---------- 底栏 ---------- */
+#dock{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;justify-content:center;gap:10px;
+  padding:12px 14px calc(env(safe-area-inset-bottom) + 12px);
+  background:linear-gradient(transparent,rgba(30,22,16,.55) 30%,rgba(30,22,16,.82))}
+#dock button{border:none;cursor:pointer;font-family:inherit;background:rgba(247,239,226,.94);color:var(--ink);
+  font-size:13.5px;font-weight:600;letter-spacing:2px;padding:12px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(0,0,0,.3);display:flex;align-items:center;gap:7px;transition:transform .15s}
+#dock button:active{transform:scale(.95)}
+#dock button em{font-style:normal;font-family:Georgia,serif;font-size:11px;color:var(--ink2);letter-spacing:.5px;font-weight:500}
+
+/* ---------- 抽屉 ---------- */
+.sheet{position:fixed;inset:0;z-index:30;pointer-events:none}
+.sheet .mask{position:absolute;inset:0;background:rgba(20,14,9,.5);opacity:0;transition:opacity .3s}
+.sheet .panel{position:absolute;left:0;right:0;bottom:0;background:var(--cream);border-radius:20px 20px 0 0;
+  padding:20px 18px calc(env(safe-area-inset-bottom) + 20px);transform:translateY(105%);transition:transform .38s cubic-bezier(.3,.9,.3,1);
+  max-height:78vh;overflow:auto}
+.sheet.on{pointer-events:auto}
+.sheet.on .mask{opacity:1}
+.sheet.on .panel{transform:none}
+.sheet h3{font-family:Georgia,'Noto Serif SC','Songti SC',serif;font-size:18px;letter-spacing:3px;text-align:center;color:var(--ink)}
+.sheet .sub{text-align:center;font-size:11px;letter-spacing:3px;color:var(--ink2);margin-top:3px}
+.sheet .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border:none;border-radius:50%;background:rgba(59,47,36,.08);color:var(--ink2);font-size:16px;cursor:pointer}
+
+/* 咖啡单 */
+#menuGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-top:16px}
+.mcard{background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--hair);box-shadow:0 4px 12px rgba(59,47,36,.07)}
+.mcard img{width:100%;height:100px;object-fit:cover;display:block}
+.mcard.noimg img{display:none}
+.mcard.noimg .mb{position:relative}
+.mcard.noimg .mb::before{content:"☕ 磨豆中";display:flex;align-items:center;justify-content:center;height:100px;color:#B9A98E;font-size:12px;letter-spacing:2px;background:linear-gradient(160deg,#F1E8D6,#E7DBC4);margin-bottom:-100px}
+.mcard .mb{padding:9px 11px 11px}
+.mcard .mn{font-size:14px;font-weight:700;letter-spacing:1px}
+.mcard .mn em{font-style:normal;font-family:Georgia,serif;font-size:11px;color:var(--ink2);margin-left:4px}
+.mcard .md2{font-size:11px;color:var(--ink2);line-height:1.6;margin-top:3px}
+.mcard .ord{margin-top:8px;width:100%;border:none;background:var(--green);color:#F4EEDF;font-size:12px;letter-spacing:2px;font-weight:700;padding:8px 0;border-radius:8px;cursor:pointer}
+.mcard .ord:active{opacity:.8}
+
+/* 小熊面板 */
+#bearPreview{display:flex;justify-content:center;margin:8px 0 4px}
+#bearPreview svg{width:150px;filter:drop-shadow(0 10px 10px rgba(59,47,36,.25))}
+#swGrid{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:14px}
+#swGrid button{aspect-ratio:1;border-radius:50%;border:2px solid rgba(59,47,36,.12);cursor:pointer;transition:transform .15s;padding:0}
+#swGrid button.sel{border-color:var(--ink);transform:scale(1.14);box-shadow:0 0 0 2.5px rgba(65,87,63,.35)}
+#swGrid button:active{transform:scale(.9)}
+#bearCap{text-align:center;font-size:11.5px;color:var(--ink2);letter-spacing:2px;margin-top:12px}
+
+/* ---------- 笔记本内页 ---------- */
+#book{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:rgba(20,14,9,.72);backdrop-filter:blur(3px)}
+#book.on{display:flex}
+.page{width:min(560px,calc(100vw - 26px));max-height:calc(100dvh - 40px);background:var(--paper);border-radius:6px;
+  box-shadow:0 24px 70px rgba(0,0,0,.5), inset 0 0 60px rgba(201,178,130,.14);position:relative;
+  padding:18px 16px calc(env(safe-area-inset-bottom) + 12px);display:flex;flex-direction:column;animation:open .4s cubic-bezier(.2,.9,.3,1)}
+@keyframes open{from{transform:translateY(26px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.page::before{content:'';position:absolute;inset:9px;border:1px solid #C9B896;pointer-events:none}
+.page::after{content:'';position:absolute;inset:13px;border:1px solid rgba(201,184,150,.45);pointer-events:none}
+.corner{position:absolute;font-size:15px;color:rgba(169,142,92,.75);z-index:2}
+.c1{top:15px;left:18px}.c2{top:15px;right:18px}.c3{bottom:52px;left:18px}.c4{bottom:52px;right:18px}
+.phead{text-align:center;margin-bottom:8px}
+.phead .shop{font-size:10.5px;letter-spacing:4px;color:#A98E5C}
+.phead .rule{width:120px;height:1px;background:linear-gradient(90deg,transparent,#C9B896,transparent);margin:6px auto 0}
+#pTitle{border:none;background:transparent;outline:none;width:100%;text-align:center;font-family:Georgia,'Noto Serif SC','Songti SC',serif;
+  font-size:20px;font-weight:700;color:var(--ink);letter-spacing:2px;padding:2px 30px}
+#pTitle::placeholder{color:rgba(169,142,92,.5);font-weight:400}
+#pBody{flex:1;min-height:42vh;border:none;background:transparent;outline:none;resize:none;width:100%;
+  font-family:Georgia,'Noto Serif SC','Songti SC','SimSun',serif;font-size:16.5px;line-height:2.15;color:#4A3B2C;letter-spacing:.5px;padding:8px 26px}
+#pBody::placeholder{color:rgba(169,142,92,.55);letter-spacing:2px}
+.pfoot{display:flex;justify-content:space-between;align-items:center;padding:8px 30px 2px;border-top:1px solid rgba(201,184,150,.5)}
+.pfoot span{font-family:Georgia,'Noto Serif SC',serif;font-style:italic;font-size:11.5px;color:#A98E5C;letter-spacing:1px}
+.pbar{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px;flex-wrap:wrap}
+.pbar button{border:none;cursor:pointer;background:var(--green);color:#F4EEDF;font-size:12px;letter-spacing:2px;font-weight:700;padding:9px 16px;border-radius:999px;font-family:inherit}
+.pbar button.ghost{background:rgba(65,87,63,.12);color:var(--green)}
+.pbar button.danger{background:rgba(164,82,63,.1);color:#A4523F}
+.pbar button:active{opacity:.75}
+#pageNum{font-family:Georgia,'Noto Serif SC',serif;font-style:italic;font-size:12.5px;color:#A98E5C;letter-spacing:1px;min-width:56px;text-align:center}
+#savedTip{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translateX(-50%) translateY(-6px);z-index:60;
+  background:var(--green);color:#F4EEDF;font-size:11.5px;letter-spacing:2px;padding:7px 16px;border-radius:999px;opacity:0;transition:all .3s;pointer-events:none}
+#savedTip.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 78px);transform:translateX(-50%) translateY(14px);z-index:50;
+  background:rgba(247,239,226,.96);color:var(--ink);font-size:13px;letter-spacing:1.5px;padding:11px 22px;border-radius:999px;
+  box-shadow:0 10px 26px rgba(0,0,0,.4);opacity:0;transition:all .35s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1;transform:translateX(-50%)}
+@media(max-width:400px){
+  #bearSeat{width:200px;bottom:calc(env(safe-area-inset-bottom) + 78px)}
+  #notebook{width:112px;height:148px}
+  #coffeeDock{width:126px}#coffeeDock img{height:126px}#coffeeDock .coaster{height:126px}
+  #dock button{padding:11px 14px;font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<div id="scene"></div>
+<div class="vig"></div>
+<div id="welcome" class="serif">欢迎光临 · 窗边的位子给你留着</div>
+
+<div id="bearSeat" title="摸摸它"></div>
+
+<div id="coffeeDock">
+  <div class="coaster">桌上还没有咖啡<br><span style="opacity:.7;font-size:10.5px">点一杯</span></div>
+  <div class="cupcard"><div class="steam"></div><div class="steam"></div><div class="steam"></div><img id="cupImg" alt=""><div class="cupname" id="cupName"></div></div>
+</div>
+
+<button id="notebook" aria-label="打开手记">
+  <span class="ribbon"></span>
+  <span class="emboss"><b>手记</b><i>Cahier</i></span>
+  <span class="hint">点开 · 写今天的故事</span>
+</button>
+
+<div id="dock">
+  <button id="btnMenu">☕ 点单 <em>Menu</em></button>
+  <button id="btnBear">🧸 小熊 <em>Bear</em></button>
+  <button id="btnBook">✒️ 手记 <em>Cahier</em></button>
+</div>
+
+<div class="sheet" id="menuSheet">
+  <div class="mask" onclick="closeSheet('menuSheet')"></div>
+  <div class="panel">
+    <button class="x" onclick="closeSheet('menuSheet')">✕</button>
+    <h3 class="serif">今日咖啡单</h3>
+    <div class="sub" style="font-family:Georgia,serif;font-style:italic">Carte du Jour</div>
+    <div id="menuGrid"></div>
+  </div>
+</div>
+
+<div class="sheet" id="bearSheet">
+  <div class="mask" onclick="closeSheet('bearSheet')"></div>
+  <div class="panel">
+    <button class="x" onclick="closeSheet('bearSheet')">✕</button>
+    <h3 class="serif">挑一只小熊陪你</h3>
+    <div class="sub">50 种毛色 · 点色即换</div>
+    <div id="bearPreview"></div>
+    <div id="swGrid"></div>
+    <div id="bearCap"></div>
+  </div>
+</div>
+
+<div id="book">
+  <div class="page">
+    <span class="corner c1">❦</span><span class="corner c2">❦</span><span class="corner c3">❧</span><span class="corner c4">❧</span>
+    <div class="phead"><div class="shop">故 事 咖 啡 馆 · CAHIER</div><div class="rule"></div></div>
+    <input id="pTitle" class="serif" placeholder="给今天起个小标题" maxlength="40">
+    <textarea id="pBody" placeholder="今天的风、今天的咖啡，和它一起坐了一下午——" spellcheck="false"></textarea>
+    <div class="pfoot"><span id="pDate"></span><span>写于故事咖啡馆</span></div>
+    <div class="pbar">
+      <button class="ghost" id="pgPrev">‹ 上页</button>
+      <span id="pageNum"></span>
+      <button class="ghost" id="pgNext">下页 ›</button>
+      <button id="pgNew">＋ 新的一页</button>
+      <button class="danger" id="pgDel">撕掉此页</button>
+      <button class="ghost" id="pgClose">合上本子</button>
+    </div>
+  </div>
+</div>
+
+<div id="savedTip">✓ 已收进本子</div>
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),2200)}
+function closeSheet(id){$("#"+id).classList.remove("on")}
+
+/* ============ 咖啡单 ============ */
+const MENU=[
+ {id:"espresso",zh:"浓缩咖啡",it:"Espresso",d:"一小时的 distilled，苦得很诚实。"},
+ {id:"latte",zh:"拿铁",it:"Caffè Latte",d:"牛奶先开口，咖啡慢慢接话。"},
+ {id:"cappuccino",zh:"卡布奇诺",it:"Cappuccino",d:"奶泡厚得像下午三点的云。"},
+ {id:"mocha",zh:"摩卡",it:"Caffè Mocha",d:"巧克力和咖啡吵了一架，后来和好了。"},
+ {id:"flatwhite",zh:"澳白",it:"Flat White",d:"话不多，但句句到位。"},
+ {id:"coldbrew",zh:"冰滴冷萃",it:"Cold Brew",d:"等了一夜才见面，冷静又清醒。"},
+ {id:"macchiato",zh:"焦糖玛奇朵",it:"Macchiato",d:"焦糖在杯壁上写了甜的批注。"},
+ {id:"cocoa",zh:"热可可",it:"Chocolat Chaud",d:"棉花糖泡在暖和里，像个小熊泡在周末。"}
+];
+let served=null;
+$("#menuGrid").innerHTML=MENU.map(m=>`<div class="mcard">
+  <img src="img/${m.id}.png" alt="${m.zh}" loading="lazy" onerror="this.style.display='none';this.parentNode.classList.add('noimg')">
+  <div class="mb"><div class="mn">${m.zh}<em>${m.it}</em></div><div class="md2">${m.d}</div>
+  <button class="ord" data-id="${m.id}">来一杯</button></div></div>`).join("");
+$("#menuGrid").addEventListener("click",e=>{
+  const b=e.target.closest(".ord");if(!b)return;
+  const m=MENU.find(x=>x.id===b.dataset.id);served=m;
+  $("#cupImg").onerror=function(){this.style.opacity=0;};$("#cupImg").style.opacity=1;$("#cupImg").src="img/"+m.id+".png";$("#cupName").textContent=m.zh+" · "+m.it;
+  $("#coffeeDock").classList.add("served");
+  closeSheet("menuSheet");
+  toast("您的"+m.zh+"好了 —— 趁热。");
+});
+
+/* ============ 小熊 ============ */
+function bearSVG(){return `<svg viewBox="0 0 240 264" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <circle cx="62" cy="54" r="30" fill="var(--bear)"/><circle cx="62" cy="54" r="15" fill="var(--bear2)"/>
+  <circle cx="178" cy="54" r="30" fill="var(--bear)"/><circle cx="178" cy="54" r="15" fill="var(--bear2)"/>
+  <ellipse cx="120" cy="90" rx="76" ry="66" fill="var(--bear)"/>
+  <ellipse cx="120" cy="108" rx="34" ry="25" fill="var(--bear2)"/>
+  <ellipse cx="120" cy="97" rx="12" ry="9" fill="#4A3728"/>
+  <path d="M120 106 v9 M120 115 q-8 8 -16 4 M120 115 q8 8 16 4" stroke="#4A3728" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <circle cx="92" cy="80" r="6.5" fill="#4A3728"/><circle cx="148" cy="80" r="6.5" fill="#4A3728"/>
+  <circle cx="94.2" cy="77.8" r="2.1" fill="#FFF"/><circle cx="150.2" cy="77.8" r="2.1" fill="#FFF"/>
+  <ellipse cx="72" cy="98" rx="11" ry="7" fill="#E8A69B" opacity=".4"/><ellipse cx="168" cy="98" rx="11" ry="7" fill="#E8A69B" opacity=".4"/>
+  <ellipse cx="120" cy="198" rx="63" ry="57" fill="var(--bear)"/>
+  <ellipse cx="120" cy="206" rx="40" ry="36" fill="var(--bear2)"/>
+  <ellipse cx="68" cy="240" rx="27" ry="20" fill="var(--bear)"/><ellipse cx="172" cy="240" rx="27" ry="20" fill="var(--bear)"/>
+  <ellipse cx="68" cy="244" rx="14" ry="10" fill="var(--bear2)"/><ellipse cx="172" cy="244" rx="14" ry="10" fill="var(--bear2)"/>
+  <ellipse cx="60" cy="184" rx="18" ry="27" fill="var(--bear)" transform="rotate(20 60 184)"/>
+  <ellipse cx="180" cy="184" rx="18" ry="27" fill="var(--bear)" transform="rotate(-20 180 184)"/>
+  <path d="M80 150 q40 20 80 0 q7 12 -3 18 q-37 17 -74 0 q-10 -6 -3 -18z" fill="#F3EAD8" stroke="rgba(59,47,36,.12)"/>
+  <path d="M152 165 l13 33 q3 9 -6 10 l-11 1" fill="#F3EAD8" stroke="rgba(59,47,36,.12)"/>
+  <circle cx="120" cy="160" r="4.5" fill="#C9A86A" opacity=".9"/>
+ </g></svg>`}
+function hexToHsl(hex){
+  let r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h=0,s=0;const l=(mx+mn)/2;
+  if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60}
+  return [h,s*100,l*100];
+}
+function lighten(color,add){
+  let h,s,l;
+  if(color[0]==="#"){[h,s,l]=hexToHsl(color)}
+  else{const m=color.match(/[\d.]+/g);h=+m[0];s=+m[1];l=+m[2]}
+  l=Math.min(92,l+add);s=Math.max(18,s-6);
+  return `hsl(${h.toFixed(0)} ${s.toFixed(0)}% ${l.toFixed(0)}%)`
+}
+const SWATCHES=(()=>{const a=[];
+  for(const l of [40,58]) for(let i=0;i<24;i++){const h=(i*15)%360;a.push(`hsl(${h} 42% ${l}%)`)}
+  a.push("#F5EFE6","#4A4038");return a})();
+let bearColor=localStorage.getItem("cafe_bear")||"#B08968";
+function renderBear(){
+  document.documentElement.style.setProperty("--bear",bearColor);
+  document.documentElement.style.setProperty("--bear2",lighten(bearColor,22));
+  $("#bearSeat").innerHTML=bearSVG();$("#bearPreview").innerHTML=bearSVG();
+  const i=SWATCHES.indexOf(bearColor);
+  $("#bearCap").textContent=i>=0?`第 ${i+1} 号毛色 —— 它很喜欢这身。`:"定制毛色 —— 独一无二的一只。";
+  $("#swGrid").querySelectorAll("button").forEach(b=>b.classList.toggle("sel",b.dataset.c===bearColor));
+}
+$("#swGrid").innerHTML=SWATCHES.map(c=>`<button data-c="${c}" style="background:${c}" aria-label="毛色"></button>`).join("");
+$("#swGrid").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  bearColor=b.dataset.c;localStorage.setItem("cafe_bear",bearColor);
+  renderBear();toast("它抖了抖耳朵，换上了新毛色。");
+});
+$("#bearSeat").addEventListener("click",()=>toast("它抬头看了你一眼，尾巴摇了摇。"));
+renderBear();
+
+/* ============ 手记本 ============ */
+let BOOK=JSON.parse(localStorage.getItem("cafe_book")||'{"pages":[],"cur":0}');
+if(!BOOK.pages)BOOK={pages:[],cur:0};
+const pT=$("#pTitle"),pB=$("#pBody");
+let saveTimer=null;
+function curPage(){return BOOK.pages[BOOK.cur]||null}
+function showPage(){
+  const p=curPage();
+  if(!p){$("#pageNum").textContent="空白本";pT.value="";pB.value="";
+    $("#pDate").textContent=new Date().toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric"});return}
+  pT.value=p.t||"";pB.value=p.txt||"";
+  $("#pDate").textContent=new Date(p.at).toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric"})+(p.ed?"（改于 "+new Date(p.ed).toLocaleDateString("zh-CN",{month:"long",day:"numeric"})+"）":"");
+  $("#pageNum").textContent="第 "+(BOOK.cur+1)+" 页 · 共 "+BOOK.pages.length+" 页";
+}
+function saveBook(silent){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    const p=curPage();
+    if(p){p.t=pT.value.trim();p.txt=pB.value;p.ed=Date.now();
+      if(!p.txt.trim()&&!p.t.trim()){/* 空页不留 */}
+    }
+    localStorage.setItem("cafe_book",JSON.stringify(BOOK));
+    if(!silent){const s=$("#savedTip");s.classList.add("on");setTimeout(()=>s.classList.remove("on"),1400)}
+  },700);
+}
+pT.addEventListener("input",()=>saveBook());
+pB.addEventListener("input",()=>saveBook());
+$("#btnBook").addEventListener("click",openBook);
+$("#notebook").addEventListener("click",openBook);
+function openBook(){
+  if(!BOOK.pages.length){newPage(true)}
+  $("#book").classList.add("on");showPage();
+  setTimeout(()=>pB.focus(),420);
+}
+$("#pgClose").addEventListener("click",()=>{$("#book").classList.remove("on");saveBook(true)});
+function newPage(silent){
+  const p={t:"",txt:"",at:Date.now()};
+  BOOK.pages.push(p);BOOK.cur=BOOK.pages.length-1;
+  localStorage.setItem("cafe_book",JSON.stringify(BOOK));
+  showPage();if(!silent)toast("翻到了新的一页。");
+}
+$("#pgNew").addEventListener("click",()=>{saveBook(true);newPage()});
+$("#pgPrev").addEventListener("click",()=>{if(BOOK.cur>0){saveBook(true);BOOK.cur--;showPage()}else toast("这是第一页了。")});
+$("#pgNext").addEventListener("click",()=>{if(BOOK.cur<BOOK.pages.length-1){saveBook(true);BOOK.cur++;showPage()}else toast("后面还没有字迹。")});
+$("#pgDel").addEventListener("click",()=>{
+  if(!BOOK.pages.length){toast("本子还是空的。");return}
+  BOOK.pages.splice(BOOK.cur,1);
+  BOOK.cur=Math.max(0,Math.min(BOOK.cur,BOOK.pages.length-1));
+  localStorage.setItem("cafe_book",JSON.stringify(BOOK));
+  if(!BOOK.pages.length){$("#book").classList.remove("on");toast("撕掉了。本子干干净净，随时重写。");return}
+  showPage();toast("这一页轻轻撕掉了。");
+});
+showPage();
+
+/* ============ 入口 ============ */
+$("#btnMenu").addEventListener("click",()=>$("#menuSheet").classList.add("on"));
+$("#btnBear").addEventListener("click",()=>$("#bearSheet").classList.add("on"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("#book").classList.remove("on");closeSheet("menuSheet");closeSheet("bearSheet")}});
+setTimeout(()=>{$("#welcome").classList.add("on");setTimeout(()=>$("#welcome").classList.remove("on"),3200)},700);
+</script>
+</body>
+</html>
